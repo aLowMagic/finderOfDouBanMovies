@@ -86,18 +86,21 @@ def updateDatabase(movieItems):
     
 if __name__ == '__main__':       
     countor = 0
-    for rang in np.arange(10.0,9.0,-0.1):
+    for rang in np.arange(8.6,8.0,-0.1):
         for start in range(0,10000,20):
             urll = "https://movie.douban.com/j/new_search_subjects?sort=T&range=%s,%s&tags=电影&start=%s" %('{:.1f}'.format(rang-0.1),'{:.1f}'.format(rang),start)
             searchResult = requests.get(url=urll, headers=header)
             searchResult = searchResult.text
-            searchResult = json.loads(searchResult)
-            searchResult = searchResult["data"]
-            if len(searchResult)!=0:
-                for i in range(len(searchResult)):
-                    items = searchResult[i]
-                    updateDatabase(items)
-                    time.sleep(0.5)  
-            else:
-                break
+            try:
+                searchResult = json.loads(searchResult)
+                searchResult = searchResult["data"]
+                if len(searchResult)!=0:
+                    for i in range(len(searchResult)):
+                        items = searchResult[i]
+                        updateDatabase(items)
+                        time.sleep(0.5)  
+                else:
+                    break
+            except:
+                print('json数据无法识别或其他问题')
     print('爬取结束，谢谢惠顾')
